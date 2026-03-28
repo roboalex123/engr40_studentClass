@@ -1,0 +1,5 @@
+# Files
+*.o
+*.out
+*.a
+*.obj
