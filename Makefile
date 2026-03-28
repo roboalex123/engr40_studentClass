@@ -1,24 +1,30 @@
 output = studentClass
 
 compiler = g++
-
 flags = -g -Wall -fsanitize=address -fsanitize=undefined -Wno-sign-compare
+depflags = -MMD -MP
 
 sourceFileExtension = cc
 
 files = $(wildcard *.$(sourceFileExtension))
+objects = $(patsubst %.$(sourceFileExtension),%.o,$(files))
+deps = $(objects:.o=.d)
 
-objects = $(patsubst %.$(sourceFileExtension), %.o, $(files))
+all: .gitignore $(output)
 
 $(output): $(objects)
 	$(compiler) $(flags) -o $@ $^
 
-$(objects): $(files)
-	$(compiler) $(flags) -c $^
+%.o: %.$(sourceFileExtension) Makefile
+	$(compiler) $(flags) $(depflags) -c $< -o $@
+
+.gitignore: Makefile
+	echo "# Ignore generated files" > .gitignore
+	echo "$(output)" >> .gitignore
+	for obj in $(objects); do echo "$$obj" >> .gitignore; done
+	for dep in $(deps); do echo "$$dep" >> .gitignore; done
 
 clean:
-	rm -f $(objects) $(output)
+	rm -f $(objects) $(deps) $(output)
 
-ignore:
-	echo "# Ignore generated files" > .gitignore
-	echo "$(output) $(objects)" >> .gitignore
+-include $(deps)

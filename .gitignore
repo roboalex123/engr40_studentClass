@@ -1,2 +1,6 @@
 # Ignore generated files
-studentClass  main.o  student.o
+studentClass
+main.o
+student.o
+main.d
+student.d
