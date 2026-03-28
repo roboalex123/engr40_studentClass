@@ -1,5 +1,2 @@
-# Files
-*.o
-*.out
-*.a
-*.obj
+# Ignore generated files
+studentClass  main.o  student.o
